@@ -23,6 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 
 import java.io.File;
@@ -160,6 +161,16 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean getRespawnAtHome() {
         return config.getBoolean("respawn-at-home", false);
+    }
+
+    @Override
+    public String getRandomSpawnLocation() {
+        return config.getString("random-spawn-location", "none");
+    }
+
+    @Override
+    public String getRandomRespawnLocation() {
+        return config.getString("random-respawn-location", "none");
     }
 
     @Override
@@ -456,6 +467,11 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getBoolean("socialspy-messages", true);
     }
 
+    @Override
+    public boolean isSocialSpyDisplayNames() {
+        return config.getBoolean("socialspy-uses-displaynames", true);
+    }
+
     private Set<String> _getMuteCommands() {
         final Set<String> muteCommands = new HashSet<>();
         if (config.isList("mute-commands")) {
@@ -698,6 +714,18 @@ public class Settings implements net.ess3.api.ISettings {
                 ess.getKnownCommandsProvider().getKnownCommands().putAll(disabledBukkitCommands);
                 disabledBukkitCommands.clear();
                 mapModified = true;
+            }
+
+            if (reloadCount.get() < 2) {
+                // on startup: add plugins again in case they registered commands with the new API
+                // we need to schedule this task before any of the below tasks using _addAlternativeCommand.
+                ess.scheduleSyncDelayedTask(() -> {
+                    for (final Plugin plugin : ess.getServer().getPluginManager().getPlugins()) {
+                        if (plugin.isEnabled()) {
+                            ess.getAlternativeCommandsHandler().addPlugin(plugin);
+                        }
+                    }
+                });
             }
 
             for (final String command : disabledCommands) {

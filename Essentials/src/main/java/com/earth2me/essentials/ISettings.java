@@ -73,6 +73,8 @@ public interface ISettings extends IConf {
 
     boolean isSocialSpyMessages();
 
+    boolean isSocialSpyDisplayNames();
+
     Set<String> getMuteCommands();
 
     @Deprecated
@@ -103,6 +105,10 @@ public interface ISettings extends IConf {
     String getProtectString(final String configName);
 
     boolean getRespawnAtHome();
+
+    String getRandomSpawnLocation();
+
+    String getRandomRespawnLocation();
 
     boolean isRespawnAtAnchor();
 
