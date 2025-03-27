@@ -59,7 +59,7 @@ public final class NumberUtil {
 
     public static String formatAsCurrency(final BigDecimal value) {
         String str = currencyFormat.format(value);
-        if (str.endsWith(".00")) {
+        if (str.endsWith(",00")) {
             str = str.substring(0, str.length() - 3);
         }
         return str;
@@ -67,7 +67,7 @@ public final class NumberUtil {
 
     public static String formatAsPrettyCurrency(final BigDecimal value) {
         String str = PRETTY_FORMAT.format(value);
-        if (str.endsWith(".00")) {
+        if (str.endsWith(",00")) {
             str = str.substring(0, str.length() - 3);
         }
         return str;

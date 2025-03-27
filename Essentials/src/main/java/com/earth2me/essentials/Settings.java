@@ -1886,6 +1886,12 @@ public class Settings implements net.ess3.api.ISettings {
             decimalFormatSymbols = DecimalFormatSymbols.getInstance(Locale.US);
         }
 
+        // Some formats do not display properly in-game due to faulty Minecraft font rendering
+        // fr-ch doesn't work because of the thousands separation character (\u202F)
+        // these lines fix the issue
+        decimalFormatSymbols.setGroupingSeparator('\'');
+        decimalFormatSymbols.setDecimalSeparator(',');
+
         final DecimalFormat currencyFormat = new DecimalFormat(currencyFormatString, decimalFormatSymbols);
         currencyFormat.setRoundingMode(RoundingMode.FLOOR);
 
